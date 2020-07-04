@@ -1,18 +1,40 @@
 package pl.coderslab.spring01hibernatekrkw04.controller;
 
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pl.coderslab.spring01hibernatekrkw04.dao.AuthorDao;
+import pl.coderslab.spring01hibernatekrkw04.dao.BookDao;
+import pl.coderslab.spring01hibernatekrkw04.dao.PublisherDao;
 import pl.coderslab.spring01hibernatekrkw04.entity.Author;
+import pl.coderslab.spring01hibernatekrkw04.entity.Publisher;
+
+import javax.transaction.Transactional;
 
 @Controller
 public class AuthorController {
     private final AuthorDao authorDao;
+    private BookDao bookDao;
+    private PublisherDao publisherDao;
 
-    public AuthorController(AuthorDao bookDao) {
-        this.authorDao = bookDao;
+    public AuthorController(AuthorDao authorDao, BookDao bookDao , PublisherDao publisherDao) {
+        this.authorDao = authorDao;
+        this.bookDao = bookDao;
+        this.publisherDao = publisherDao;
+    }
+
+    @GetMapping("/getBooks/{authorId}")
+    @ResponseBody
+    @Transactional
+    public String getBooks(@PathVariable Long authorId){
+        Author author = authorDao.findById(authorId);
+
+        Hibernate.initialize(author.getBooks());
+
+        return author.getBooks().toString();
     }
 
     //    - zapis encji
@@ -54,4 +76,6 @@ public class AuthorController {
         authorDao.delete(author);
         return "deleted";
     }
+
+
 }
