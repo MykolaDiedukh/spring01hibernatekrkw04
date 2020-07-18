@@ -1,6 +1,9 @@
 package pl.coderslab.spring01hibernatekrkw04.entity;
 
+import org.hibernate.validator.constraints.pl.PESEL;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -14,6 +17,10 @@ public class Author {
     private String firstName;
     @NotNull
     private String lastName;
+    @PESEL
+    private int pesel;
+    @Email
+    private String email;
     @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
     private List<Book> books;
 

@@ -1,6 +1,10 @@
 package pl.coderslab.spring01hibernatekrkw04.entity;
 
+import org.hibernate.validator.constraints.pl.NIP;
+import org.hibernate.validator.constraints.pl.REGON;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "publishers")
@@ -8,7 +12,12 @@ public class Publisher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String name;
+    @NIP
+    private int nip;
+    @REGON
+    private int regon;
 
 
     public Publisher() {
