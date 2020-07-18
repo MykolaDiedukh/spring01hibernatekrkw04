@@ -10,9 +10,12 @@ import pl.coderslab.spring01hibernatekrkw04.dao.AuthorDao;
 import pl.coderslab.spring01hibernatekrkw04.dao.BookDao;
 import pl.coderslab.spring01hibernatekrkw04.dao.PublisherDao;
 import pl.coderslab.spring01hibernatekrkw04.entity.Author;
+import pl.coderslab.spring01hibernatekrkw04.entity.Book;
 import pl.coderslab.spring01hibernatekrkw04.entity.Publisher;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class AuthorController {
@@ -24,6 +27,16 @@ public class AuthorController {
         this.authorDao = authorDao;
         this.bookDao = bookDao;
         this.publisherDao = publisherDao;
+    }
+
+    @GetMapping("/author/all")
+    @ResponseBody
+    public String showAll(){
+        List<Author> authors = authorDao.getAll();
+        String collect = authors.stream()
+                .map(Author::toString)
+                .collect(Collectors.joining(", \r\n <br>"));
+        return collect;
     }
 
     @GetMapping("/getBooks/{authorId}")

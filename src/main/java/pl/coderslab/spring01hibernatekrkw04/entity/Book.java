@@ -1,6 +1,12 @@
 package pl.coderslab.spring01hibernatekrkw04.entity;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +16,31 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Size(min = 5)
     private String title;
-    private Integer rating;
+    @Range(min = 1, max = 10)
+    private int rating;
+    @Size(max = 600)
     private String description;
+
+    public int getPages() {
+        return pages;
+    }
+
+    public Book setPages(int pages) {
+        this.pages = pages;
+        return this;
+    }
+
+    @Min(2)
+    private  int pages;
+
+    @ManyToOne
+    @NotNull
+    private Publisher publisher;
+    @NotEmpty
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Author> authors = new ArrayList<>();
 
     public Publisher getPublisher() {
         return publisher;
@@ -29,11 +57,6 @@ public class Book {
     public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
-
-    @ManyToOne
-    private Publisher publisher;
-    @ManyToMany
-    private List<Author> authors = new ArrayList<>();
 
     public Book() {
     }
@@ -61,11 +84,11 @@ public class Book {
         this.title = title;
     }
 
-    public Integer getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 
@@ -84,6 +107,7 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", rating=" + rating +
                 ", description='" + description + '\'' +
+                ", publisher=" + publisher +
                 '}';
     }
 }

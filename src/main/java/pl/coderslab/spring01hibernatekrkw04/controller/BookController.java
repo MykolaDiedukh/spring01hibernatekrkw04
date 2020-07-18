@@ -12,6 +12,9 @@ import pl.coderslab.spring01hibernatekrkw04.entity.Author;
 import pl.coderslab.spring01hibernatekrkw04.entity.Book;
 import pl.coderslab.spring01hibernatekrkw04.entity.Publisher;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 public class BookController {
     private final BookDao bookDao;
@@ -24,7 +27,8 @@ public class BookController {
         this.authorDao = authorDao;
     }
 
-    @GetMapping("/addNew")
+
+    @GetMapping("/book/addNew")
     @ResponseBody
     public String addNew(){
         Publisher publisher = new Publisher();
@@ -41,9 +45,59 @@ public class BookController {
         book.setPublisher(publisher);
         book.getAuthors().add(author);
 
-        bookDao.saveBook(book);
+        bookDao.create(book);
 
         return "dodano";
+    }
+
+    @GetMapping("/book/anyPublisher")
+    @ResponseBody
+    public String showWithPublisher(){
+        List<Book> books = bookDao.getPublisherIsNotNull();
+        String collect = books.stream()
+                .map(Book::toString)
+                .collect(Collectors.joining(", \r\n <br>"));
+        return collect;
+    }
+
+    @GetMapping("/book/all")
+    @ResponseBody
+    public String showAll(){
+        List<Book> books = bookDao.readAll();
+        String collect = books.stream()
+                .map(Book::toString)
+                .collect(Collectors.joining(", \r\n <br>"));
+        return collect;
+    }
+
+    @GetMapping("/byRating/{rating}")
+    @ResponseBody
+    public String byRating(@PathVariable int rating){
+        List<Book> books = bookDao.getRatingList(rating);
+        String collect = books.stream()
+                .map(Book::toString)
+                .collect(Collectors.joining(", \r\n <br>"));
+        return collect;
+    }
+
+    @GetMapping("/byPublisher/{id}")
+    @ResponseBody
+    public String byPublisher(@PathVariable long id){
+        List<Book> books = bookDao.getPublisherById(id);
+        String collect = books.stream()
+                .map(Book::toString)
+                .collect(Collectors.joining(", \r\n <br>"));
+        return collect;
+    }
+
+    @GetMapping("/byAuthor/{name}")
+    @ResponseBody
+    public String byPublisher(@PathVariable String name){
+        List<Book> books = bookDao.getByAuthor(name);
+        String collect = books.stream()
+                .map(Book::toString)
+                .collect(Collectors.joining(", \r\n <br>"));
+        return collect;
     }
 
     //    - zapis encji
@@ -54,7 +108,7 @@ public class BookController {
         book.setTitle("Thinking in Java");
         book.setRating(10);
         book.setDescription("Be a good programmer");
-        bookDao.saveBook(book);
+        bookDao.create(book);
         return "Id dodanej książki to:"
                 + book.getId();
     }

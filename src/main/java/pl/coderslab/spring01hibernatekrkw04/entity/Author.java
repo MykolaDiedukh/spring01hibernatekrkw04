@@ -1,6 +1,7 @@
 package pl.coderslab.spring01hibernatekrkw04.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -9,9 +10,11 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
     private List<Book> books;
 
     public Author() {
@@ -21,6 +24,10 @@ public class Author {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public  String getFullName(){
+        return  this.firstName + " " + this.lastName;
     }
 
     public Long getId() {

@@ -1,6 +1,7 @@
 package pl.coderslab.spring01hibernatekrkw04.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -9,12 +10,25 @@ import pl.coderslab.spring01hibernatekrkw04.entity.Author;
 import pl.coderslab.spring01hibernatekrkw04.entity.Book;
 import pl.coderslab.spring01hibernatekrkw04.entity.Publisher;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 public class PublisherController {
     private final PublisherDao publisherDao;
 
     public PublisherController(PublisherDao publisher) {
         this.publisherDao = publisher;
+    }
+
+    @GetMapping("/publishers/all")
+    @ResponseBody
+    public String showAll(){
+        List<Publisher> publishers = publisherDao.readAll();
+        String collect = publishers.stream()
+                .map(Publisher::toString)
+                .collect(Collectors.joining(", \r\n <br>"));
+        return collect;
     }
 
     //    - zapis encji

@@ -1,11 +1,14 @@
 package pl.coderslab.spring01hibernatekrkw04.dao;
 
 import org.springframework.stereotype.Repository;
+import pl.coderslab.spring01hibernatekrkw04.entity.Book;
 import pl.coderslab.spring01hibernatekrkw04.entity.Publisher;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 @Transactional
@@ -32,5 +35,10 @@ public class PublisherDao {
     //- usuwanie po id
     public void delete(Publisher publisher) {
         entityManager.remove(entityManager.contains(publisher) ? publisher : entityManager.merge(publisher));
+    }
+
+    public List<Publisher> readAll(){
+        Query query = this.entityManager.createQuery("SELECT p FROM Publisher p");
+        return query.getResultList();
     }
 }
